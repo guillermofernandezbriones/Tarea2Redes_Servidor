@@ -1,18 +1,3 @@
-PARA,juanito,wena como estai
-PARA,juanito,te voy a pegarte
-PARA,pablito,no porfa no
-PARA,juanito,i ke paza
-USER juanito
-USER juanito
-USER juanito
-USER juanito
-USER juanito
-USER juanito
-USER juanito
-USER juanito
-USER juanito
-USER pablito
-USER juanito
-USER juanito
-USER juanito
-USER juanito
+PARA,juanito,De: alvarito | Mensaje: mala noooo
+PARA,juanito,De: pablito | Mensaje: hola juanitoms
+PARA,juanito,De: memito | Mensaje: no vayas a la U

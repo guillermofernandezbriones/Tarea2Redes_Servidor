@@ -16,28 +16,35 @@ public class servidorTCP {
 			recibidoDesdeCliente = desdeCliente.readLine();
 			System.out.println("Recibido: " + recibidoDesdeCliente);
 			
-			// En este try catch se guarda todo lo que se envia desde el otro lado en un archivo de texto
-			try{
-				// Se crea el .txt con los datos recibidos
-				File datosRecibidos = new File("datos_recibidos.txt");
-				
-				// El (..., true) es para que se agregue lo leido al final del archivo -append-)
-				BufferedWriter escritor = new BufferedWriter(new FileWriter(datosRecibidos, true));
-				
-				// Escribo en el archivo nuevo dado el siguiente formato
-				escritor.write(recibidoDesdeCliente);
-				escritor.newLine();
-				
-				// Cierro escritor
-				escritor.close();
-			}
-			catch(Exception ioe){
-				System.out.println(ioe.toString());
+			// Tokenizamos el string recibido desde el cliente
+			// Este es para que las solicitudes "USER" NO se guarden en el archivo "datos_recibidos.txt"
+			StringTokenizer stUserRecibidoPre = new StringTokenizer(recibidoDesdeCliente);
+			
+			if(!stUserRecibidoPre.nextToken().equals("USER")){
+				// En este try catch se guarda todo lo que se envia desde el otro lado en un archivo de texto
+				try{
+					// Se crea el .txt con los datos recibidos
+					File datosRecibidos = new File("datos_recibidos.txt");
+					
+					// El (..., true) es para que se agregue lo leido al final del archivo -append-)
+					BufferedWriter escritor = new BufferedWriter(new FileWriter(datosRecibidos, true));
+					
+					// Escribo en el archivo nuevo dado el siguiente formato
+					escritor.write(recibidoDesdeCliente);
+					escritor.newLine();
+					
+					// Cierro escritor
+					escritor.close();
+				}
+				catch(Exception ioe){
+					System.out.println(ioe.toString());
+				}
 			}
 			
 			/** DESDE ACÁ ES NUEVO **/
 			
 			// Tokenizamos el string recibido desde el cliente
+			// Lo hacemos de nuevo porque necesitamos leer cuando se envio un comando "USER"
 			StringTokenizer stUserRecibido = new StringTokenizer(recibidoDesdeCliente);
 			
 			// Si es que se recibe un nick, entonces se ven en el archivo todos los mensajes con ese nick
@@ -75,7 +82,7 @@ public class servidorTCP {
 									i++;
 								}
 								else
-									mensaje = mensaje + "\n" + strtok.nextElement().toString();
+									mensaje = mensaje + "--" + strtok.nextElement().toString();
 							}
 						}
 					}
@@ -84,7 +91,9 @@ public class servidorTCP {
 				System.out.println(mensaje);
 				
 				// Hay que enviar mensaje de vuelta al cliente TCP ahora
-				haciaCliente.writeBytes(mensaje);
+				// El '\n' es necesario, por eso al otro lado se quedaba pegado...
+				// (razon: al otro lado leo con readLine(); si no hay salto de linea entonces se queda pegado)
+				haciaCliente.writeBytes(mensaje + '\n');
 				
 				lector.close();
 			}
